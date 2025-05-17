@@ -167,13 +167,13 @@ const addTransformIndexHtml = {
 console.warn = () => {};
 
 const logger = createLogger();
-const loggerError = logger.error;
+const originalError = logger.error;
 
 logger.error = (msg, options) => {
 	if (options?.error?.toString().includes('CssSyntaxError: [postcss]')) {
 		return;
 	}
-	loggerError(msg, options);
+	originalError(msg, options);
 };
 
 export default defineConfig({
@@ -185,12 +185,12 @@ export default defineConfig({
 		headers: {
 			'Cross-Origin-Embedder-Policy': 'credentialless',
 		},
-		allowedHosts: true,
+		allowedHosts: 'all',
 	},
 	resolve: {
-		extensions: ['.jsx', '.js', '.tsx', '.ts', '.json'],
 		alias: {
 			'@': path.resolve(__dirname, './src'),
 		},
+		extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
 	},
 });
