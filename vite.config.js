@@ -100,7 +100,6 @@ const originalFetch = window.fetch;
 window.fetch = function(...args) {
 	const url = args[0] instanceof Request ? args[0].url : args[0];
 
-	// Skip WebSocket URLs
 	if (url.startsWith('ws:') || url.startsWith('wss:')) {
 		return originalFetch.apply(this, args);
 	}
@@ -108,8 +107,6 @@ window.fetch = function(...args) {
 	return originalFetch.apply(this, args)
 		.then(async response => {
 			const contentType = response.headers.get('Content-Type') || '';
-
-			// Exclude HTML document responses
 			const isDocumentResponse =
 				contentType.includes('text/html') ||
 				contentType.includes('application/xhtml+xml');
@@ -127,7 +124,6 @@ window.fetch = function(...args) {
 			if (!url.match(/\\.html?$/i)) {
 				console.error(error);
 			}
-
 			throw error;
 		});
 };
@@ -181,6 +177,7 @@ logger.error = (msg, options) => {
 };
 
 export default defineConfig({
+	base: '/AL-Task/',
 	customLogger: logger,
 	plugins: [react(), addTransformIndexHtml],
 	server: {
